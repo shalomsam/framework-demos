@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@utility h1 {
+    @apply text-2xl font-bold;
+}
+
+@utility h2 {
+    @apply text-xl font-bold;
+}
+
+@utility h3 {
+    @apply text-lg font-bold;
+}
+
+@utility h4 {
+    @apply text-base font-bold;
+}
+
+@utility h5 {
+    @apply text-sm font-bold;
+}
+
+@utility h6 {
+    @apply text-xs font-bold;
+}
