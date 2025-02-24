@@ -1,6 +1,6 @@
 <script lang="ts">
     /** @type {{ section: string }} section */
-    let { title, isDone } = $props();
+    let { id, title, isDone, handleDelete } = $props();
     import TrashIcon from "virtual:icons/material-symbols/delete-forever-rounded";
 </script>
 
@@ -9,7 +9,9 @@
 <p class="todoContainer" onclick={() => isDone = !isDone}>
     <input type="checkbox" class="margin-right-10px" checked={isDone} />
     <span class={{"flex-grow-1": true, "line-through": isDone}}>{ title }</span>
-    <button class="btn btn-danger" aria-label="Delete"><TrashIcon /></button>
+    <button class="btn btn-danger cursor-pointer" aria-label="Delete" onclick={() => handleDelete(id)}>
+        <TrashIcon />
+    </button>
 </p>
 
 <style lang="postcss">
