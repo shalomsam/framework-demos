@@ -21,3 +21,9 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# docker compose volumes
+data
+logs
+.pnpm-store
+.svelte-kit

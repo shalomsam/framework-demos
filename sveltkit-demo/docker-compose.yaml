@@ -1,0 +1,43 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    environment:
+      PGUSER: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+      POSTGRES_DB: todoapp
+    volumes:
+      - data:/data/postgres
+    ports:
+      - "5332:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  app:
+    build: .
+    container_name: todoapp
+    environment:
+      DBTYPE: postgres
+      DBHOST: db
+      DBPORT: 5432
+      DBUSER: postgres
+      DBPASSWORD: postgres
+      DBNAME: todoapp
+    volumes:
+      - type: bind
+        source: .
+        target: /usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 5173:5173
+    depends_on:
+      - db
+
+volumes:
+  data:

@@ -1,17 +1,34 @@
 <script lang="ts">
-    import Todo from "$lib/Todo.svelte";
+    import TodoUI from "$lib/components/Todo.svelte";
+	import { Todo } from "$lib/database/entity/Todo";
+	import type { PageProps } from "../$types";
 
-    let todos = [
-        { id: 1, title: "Learn Svelte", isDone: true },
-        { id: 2, title: "Learn SvelteKit", isDone: false },
-    ];
+    let { data } = $props();
 
-    let addTodo = (title: string) => {
-        todos = [...todos, { id: todos.length + 1, title, isDone: false }];
+    let todos: Todo[] = $state(data.todos);
+
+    let addTodo = async (title: string, isDone: boolean = false) => {
+        let todo = new Todo();
+        todo.title = title;
+        todo.isDone = isDone;
+        let response = await fetch("/tasks", {
+            method: "POST",
+            body: JSON.stringify(todo),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(res => res.json());
+        
+        console.log(`response [POST]: ${JSON.stringify(response)}`);
+        todos = [...todos, response];
     }
 
-    let handleDelete = (id: number) => {
-        todos = todos.filter(todo => todo.id != id);
+    let handleDelete = async (id: number) => {
+        let response = await fetch(`/tasks/${id}`, {
+            method: "DELETE"
+        }).then(res => res.json());
+        console.log(`response [DELETE]: ${JSON.stringify(response)}`);
+        todos = todos.filter(todo => todo.id !== id);
     }
 
     let handleEnter = (e: KeyboardEvent) => {
@@ -28,5 +45,5 @@
     <input type="text" placeholder="Add a new task" class="flex-grow input-bordered outline-none" onkeyup={handleEnter} />
 </div>
 {#each todos as todo}
-    <Todo {...todo} handleDelete={handleDelete} />
+    <TodoUI {...todo} handleDelete={handleDelete} />
 {/each}
